@@ -2,11 +2,7 @@ import { SERVER_URL } from "@env";
 import axios from "axios";
 import { Account, accountDecoder } from "../../types/account";
 import { array } from "decoders";
-import {
-  UseMutationOptions,
-  useMutation,
-  useQuery,
-} from "@tanstack/react-query";
+import { UseMutationOptions, useMutation, useQuery } from "@tanstack/react-query";
 
 export function useAccounts() {
   return useQuery({ queryKey: ["accounts"], queryFn: getAccounts });
@@ -18,9 +14,7 @@ async function getAccounts(): Promise<Account[]> {
   return array(accountDecoder).verify(response.data);
 }
 
-export function useNewAccountMutation(
-  options?: UseMutationOptions<Account, Error, string>
-) {
+export function useNewAccountMutation(options?: UseMutationOptions<Account, Error, string>) {
   return useMutation({
     mutationFn: (name: string) => createAccount(name),
     ...options,

@@ -1,18 +1,13 @@
 import { ScreenProps } from "../../../types/navigation";
 import { useRefreshOnFocus } from "../../hooks/useRefreshOnFocus";
 import { ActivityIndicator, Text, Button, Divider } from "react-native-paper";
-import { FlatList, View } from "react-native";
+import { FlatList, TouchableOpacity, View } from "react-native";
 import { useAccounts } from "../../services/accountService";
-import { useCallback, useState } from "react";
+import { usePullDownRefresh } from "../../hooks/usePullDownRefresh";
 
-export function AccountsScreen({ navigation }: ScreenProps) {
+export function AccountsScreen({ navigation }: ScreenProps<"Accounts">) {
   const { data, isLoading, refetch } = useAccounts();
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    refetch().then(() => setRefreshing(false));
-  }, [refetch]);
+  const { refreshing, onRefresh } = usePullDownRefresh(refetch);
 
   useRefreshOnFocus(refetch);
 
@@ -27,9 +22,11 @@ export function AccountsScreen({ navigation }: ScreenProps) {
         data={data}
         keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => (
-          <View style={{ padding: 12 }}>
-            <Text variant="displaySmall">{item.name}</Text>
-          </View>
+          <TouchableOpacity onPress={() => navigation.navigate("AccountRecords", { account: item })}>
+            <View style={{ padding: 12 }}>
+              <Text variant="displaySmall">{item.name}</Text>
+            </View>
+          </TouchableOpacity>
         )}
         ItemSeparatorComponent={Divider}
         refreshing={refreshing}

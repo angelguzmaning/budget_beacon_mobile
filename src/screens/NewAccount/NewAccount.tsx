@@ -4,7 +4,7 @@ import { ActivityIndicator, Button, TextInput, Text } from "react-native-paper";
 import { ScreenProps } from "../../../types/navigation";
 import { useNewAccountMutation } from "../../services/accountService";
 
-export function NewAccountScreen({ navigation }: ScreenProps) {
+export function NewAccountScreen({ navigation }: ScreenProps<"NewAccount">) {
   const createAccountMutation = useNewAccountMutation({
     onSuccess: () => {
       ToastAndroid.show("Account created successfully", ToastAndroid.SHORT);
@@ -16,13 +16,7 @@ export function NewAccountScreen({ navigation }: ScreenProps) {
   });
 
   return (
-    <Formik
-      initialValues={{ name: "" }}
-      onSubmit={(values) => {
-        console.log("mutating", values);
-        createAccountMutation.mutate(values.name);
-      }}
-    >
+    <Formik initialValues={{ name: "" }} onSubmit={(values) => createAccountMutation.mutate(values.name)}>
       {({ handleChange, handleBlur, handleSubmit, values }) => (
         <View style={{ padding: 24, gap: 12 }}>
           <TextInput
