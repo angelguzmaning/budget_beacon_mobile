@@ -26,3 +26,14 @@ async function createAccount(accountName: string) {
 
   return accountDecoder.verify(response.data);
 }
+
+export function useDeleteAccountMutation(options?: UseMutationOptions<void, Error, number>) {
+  return useMutation({
+    mutationFn: (accountId: number) => deleteAccount(accountId),
+    ...options,
+  });
+}
+
+async function deleteAccount(accountId: number) {
+  await axios.delete(`${SERVER_URL}/accounts/${accountId}/`);
+}
