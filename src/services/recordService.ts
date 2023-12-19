@@ -34,3 +34,14 @@ async function createRecord(record: NewItem<TransactionRecord>) {
 
   return recordDecoder.verify(response.data);
 }
+
+export function useDeleteRecordMutation(options?: UseMutationOptions<void, Error, number>) {
+  return useMutation({
+    mutationFn: (recordId: number) => deleteRecord(recordId),
+    ...options,
+  });
+}
+
+async function deleteRecord(recordId: number) {
+  await axios.delete(`${SERVER_URL}/records/${recordId}/`);
+}

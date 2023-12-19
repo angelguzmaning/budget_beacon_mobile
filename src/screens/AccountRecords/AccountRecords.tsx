@@ -3,12 +3,11 @@ import { ActivityIndicator, Button, Dialog, Divider, Text } from "react-native-p
 import { ScreenProps } from "../../../types/navigation";
 import { useRecordsByAccount } from "../../services/recordService";
 import { P, match } from "ts-pattern";
-import { TransactionRecord } from "../../../types/transactionRecord";
-import { format } from "date-fns";
 import { useRefreshOnFocus } from "../../hooks/useRefreshOnFocus";
 import { usePullDownRefresh } from "../../hooks/usePullDownRefresh";
 import { useEffect, useState } from "react";
 import { useDeleteAccountMutation } from "../../services/accountService";
+import { AccountRecordListItem } from "../../components/AccountRecordListItem/AccountRecordListItem";
 
 export function AccountRecordsScreen({
   navigation,
@@ -41,7 +40,7 @@ export function AccountRecordsScreen({
           <FlatList
             data={data}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <AccountRecordItem record={item} />}
+            renderItem={({ item }) => <AccountRecordListItem record={item} />}
             ItemSeparatorComponent={Divider}
             contentContainerStyle={{ paddingBottom: 24 }}
             refreshing={refreshing}
@@ -54,16 +53,6 @@ export function AccountRecordsScreen({
         navigation={navigation}
         accountId={account.id}
       />
-    </View>
-  );
-}
-
-function AccountRecordItem({ record }: { record: TransactionRecord }) {
-  return (
-    <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 12 }}>
-      <Text>{record.description}</Text>
-      <Text>{record.amount}</Text>
-      <Text>{format(record.date, "yyyy/MM/dd")}</Text>
     </View>
   );
 }
