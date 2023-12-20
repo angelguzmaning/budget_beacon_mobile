@@ -8,6 +8,7 @@ import { usePullDownRefresh } from "../../hooks/usePullDownRefresh";
 import { useEffect, useState } from "react";
 import { useDeleteAccountMutation } from "../../services/accountService";
 import { AccountRecordListItem } from "../../components/AccountRecordListItem/AccountRecordListItem";
+import { TransactionRecord } from "../../../types/transactionRecord";
 
 export function AccountRecordsScreen({
   navigation,
@@ -38,9 +39,9 @@ export function AccountRecordsScreen({
         .with({ data: P.nullish }, () => <Text>No data</Text>)
         .otherwise(({ data }) => (
           <FlatList
-            data={data}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <AccountRecordListItem record={item} />}
+            data={Object.entries(data)}
+            keyExtractor={([date]) => date}
+            renderItem={({ item: [date, records] }) => <DateRecords date={date} records={records} />}
             ItemSeparatorComponent={Divider}
             contentContainerStyle={{ paddingBottom: 24 }}
             refreshing={refreshing}
@@ -52,6 +53,22 @@ export function AccountRecordsScreen({
         setConfirmDialogVisible={setConfirmDialogVisible}
         navigation={navigation}
         accountId={account.id}
+      />
+    </View>
+  );
+}
+
+function DateRecords({ date, records }: { date: string; records: TransactionRecord[] }) {
+  return (
+    <View>
+      <View style={{ alignItems: "center", padding: 8 }}>
+        <Text variant="titleMedium">{date}</Text>
+      </View>
+      <FlatList
+        data={records}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <AccountRecordListItem record={item} />}
+        ItemSeparatorComponent={Divider}
       />
     </View>
   );

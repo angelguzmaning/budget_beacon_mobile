@@ -1,7 +1,7 @@
 import { SERVER_URL } from "@env";
 import { UseMutationOptions, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { recordDecoder, TransactionRecord } from "../../types/transactionRecord";
+import { partitionByDateOrdered, recordDecoder, TransactionRecord } from "../../types/transactionRecord";
 import { array } from "decoders";
 import { NewItem } from "../../types/db";
 import { format } from "date-fns";
@@ -16,7 +16,7 @@ export function useRecordsByAccount(accountId: number) {
 async function getRecordsByAccount(accountId: number) {
   const response = await axios.get(`${SERVER_URL}/accounts/${accountId}/records/`);
 
-  return array(recordDecoder).verify(response.data);
+  return partitionByDateOrdered(array(recordDecoder).verify(response.data));
 }
 
 export function useNewRecordMutation(
